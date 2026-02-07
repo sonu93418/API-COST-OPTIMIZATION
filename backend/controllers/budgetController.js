@@ -1,5 +1,5 @@
 const Budget = require('../models/Budget');
-const APILog = require('../models/APILog');
+const APILog = require('../models/ApiLog');
 
 // @desc    Get all budgets
 // @route   GET /api/budgets

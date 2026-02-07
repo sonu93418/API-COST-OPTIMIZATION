@@ -1,4 +1,4 @@
-const APILog = require('../models/APILog');
+const APILog = require('../models/ApiLog');
 const PricingRule = require('../models/PricingRule');
 
 /**

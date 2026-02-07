@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const PricingRule = require('../models/PricingRule');
-const APILog = require('../models/APILog');
+const APILog = require('../models/ApiLog');
 const Budget = require('../models/Budget');
 
 const connectDB = async () => {
@@ -99,8 +99,8 @@ const seedData = async () => {
 
     // Create Budgets
     console.log('Creating budgets...');
-    const now = new Date();
-    const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const currentDate = new Date();
+    const currentPeriod = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
 
     await Budget.insertMany([
       {

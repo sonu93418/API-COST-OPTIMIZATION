@@ -1,4 +1,4 @@
-const APILog = require('../models/APILog');
+const APILog = require('../models/ApiLog');
 const CostCalculator = require('../utils/costCalculator');
 
 // @desc    Get analytics dashboard data
