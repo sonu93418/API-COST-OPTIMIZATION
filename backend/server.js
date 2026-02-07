@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/database');
 const AnomalyDetector = require('./utils/anomalyDetector');
 const APITracker = require('./middleware/apiTracker');
@@ -23,6 +24,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // Parse cookies
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // API Tracker middleware (available on all routes)

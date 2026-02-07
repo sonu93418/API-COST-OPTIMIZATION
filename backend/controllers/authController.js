@@ -10,6 +10,35 @@ const generateToken = (id) => {
   });
 };
 
+// Send token response with httpOnly cookie
+const sendTokenResponse = (user, statusCode, res) => {
+  const token = generateToken(user._id);
+
+  const options = {
+    expires: new Date(
+      Date.now() + (process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true, // Prevents XSS attacks
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    sameSite: 'strict' // CSRF protection
+  };
+
+  res
+    .status(statusCode)
+    .cookie('token', token, options)
+    .json({
+      success: true,
+      token, // Also send in response for backward compatibility
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        company: user.company
+      }
+    });
+};
+
 // @desc    Register new user
 // @route   POST /api/auth/register
 // @access  Public
@@ -47,19 +76,9 @@ exports.register = async (req, res) => {
       company
     });
 
-    const token = generateToken(user._id);
+    sendTokenResponse(user, 201, res);
 
-    res.status(201).json({
-      success: true,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        company: user.company
-      }
-    });
+    sendTokenResponse(user, 201, res);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -110,19 +129,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = generateToken(user._id);
-
-    res.status(200).json({
-      success: true,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        company: user.company
-      }
-    });
+    sendTokenResponse(user, 200, res);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -156,4 +163,19 @@ exports.getMe = async (req, res) => {
       error: error.message
     });
   }
+};
+
+// @desc    Logout user / clear cookie
+// @route   GET /api/auth/logout
+// @access  Private
+exports.logout = async (req, res) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+
+  res.status(200).json({
+    success: true,
+    message: 'Logged out successfully'
+  });
 };
