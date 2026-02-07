@@ -11,6 +11,8 @@ import Pricing from './pages/Pricing';
 import Alerts from './pages/Alerts';
 import Budgets from './pages/Budgets';
 import Optimization from './pages/Optimization';
+import Profile from './pages/Profile';
+import TestAPILogger from './pages/TestAPILogger';
 
 // Components
 import Layout from './components/Layout';
@@ -27,10 +29,12 @@ function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="logs" element={<Logs />} />
+          <Route path="test-logger" element={<TestAPILogger />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="budgets" element={<Budgets />} />
           <Route path="optimization" element={<Optimization />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>

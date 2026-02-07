@@ -37,6 +37,7 @@ app.use('/api/pricing', require('./routes/pricingRoutes'));
 app.use('/api/alerts', require('./routes/alertRoutes'));
 app.use('/api/budgets', require('./routes/budgetRoutes'));
 app.use('/api/optimization', require('./routes/optimizationRoutes'));
+app.use('/api/logs', require('./routes/apiLogRoutes')); // Real-time API logging
 
 // Health check
 app.get('/api/health', (req, res) => {
