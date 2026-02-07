@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: api-cost-optimization-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: FRONTEND_URL
+        sync: false
+      - key: PORT
+        value: 5000
+      - key: ALERT_SPIKE_THRESHOLD
+        value: 3
+      - key: ALERT_CHECK_INTERVAL
+        value: 300000
+    healthCheckPath: /api/health
