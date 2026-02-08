@@ -1,0 +1,75 @@
+flowchart TD
+    %% Start
+    A[📱 Application Makes API Call] --> B{🔍 API Tracker Middleware}
+    
+    %% API Tracking Process
+    B --> C[📝 Log API Call Details]
+    C --> D[⏱️ Record Start Time]
+    D --> E[🌐 Execute External API Call]
+    
+    %% API Response Handling
+    E --> F{✅ API Call Success?}
+    F -->|Yes| G[📊 Calculate Response Time]
+    F -->|No| H[❌ Log Error Details]
+    
+    %% Cost Calculation
+    G --> I[💰 Cost Calculator]
+    H --> I
+    I --> J[📋 Get Pricing Rules]
+    J --> K[🧮 Calculate Estimated Cost]
+    
+    %% Data Storage
+    K --> L[💾 Save API Log to MongoDB]
+    L --> M[🔄 Update Real-time Dashboard]
+    
+    %% Analytics & Processing
+    M --> N[📈 Analytics Processing]
+    N --> O{🚨 Anomaly Detection}
+    O -->|Anomaly Detected| P[🔔 Trigger Alert]
+    O -->|Normal Usage| Q[📊 Update Analytics]
+    
+    %% Budget & Optimization
+    P --> R[💳 Budget Controller]
+    Q --> R
+    R --> S{💸 Budget Exceeded?}
+    S -->|Yes| T[🚨 Budget Alert]
+    S -->|No| U[✅ Continue Monitoring]
+    
+    %% Optimization Engine
+    T --> V[⚙️ Optimization Engine]
+    U --> V
+    V --> W[💡 Generate Suggestions]
+    W --> X[📋 Display Recommendations]
+    
+    %% User Interaction Points
+    Y[👤 User Views Dashboard] --> Z[📊 Real-time Analytics]
+    Z --> AA[📝 API Logs View]
+    AA --> BB[💰 Cost Breakdown]
+    BB --> CC[🎯 Optimization Tips]
+    
+    %% Admin Functions
+    DD[👨‍💼 Admin User] --> EE[⚙️ Manage Pricing Rules]
+    DD --> FF[💰 Set Budgets]
+    DD --> GG[🔔 Configure Alerts]
+    
+    %% Data Flow Connections
+    L -.-> Z
+    W -.-> CC
+    EE --> J
+    FF --> R
+    GG --> P
+    
+    %% Styling with colors
+    classDef processClass fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef decisionClass fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef dataClass fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef alertClass fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    classDef userClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef externalClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class A,C,D,E,G,I,J,K,L,M,N,V,W processClass
+    class B,F,O,S decisionClass
+    class L,AA,BB,Z dataClass
+    class H,P,T alertClass
+    class Y,DD,X,CC,EE,FF,GG userClass
+    class E externalClass

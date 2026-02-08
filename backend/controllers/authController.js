@@ -54,6 +54,16 @@ exports.register = async (req, res) => {
 
     const { name, email, password, role, company } = req.body;
 
+    // Check if mongoose connection is ready
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database temporarily unavailable. Please try again later.',
+        error: 'MongoDB connection not established'
+      });
+    }
+
     // Check if user exists
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -77,9 +87,8 @@ exports.register = async (req, res) => {
     });
 
     sendTokenResponse(user, 201, res);
-
-    sendTokenResponse(user, 201, res);
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during registration',
