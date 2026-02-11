@@ -17,19 +17,23 @@ import {
 } from 'lucide-react';
 
 const Layout = () => {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin, isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, description: 'Overview & Analytics' },
-    { name: 'API Logs', href: '/logs', icon: FileText, description: 'Request History' },
-    { name: 'Test Logger', href: '/test-logger', icon: Zap, description: 'Log Real API Calls' },
-    { name: 'Pricing Rules', href: '/pricing', icon: DollarSign, description: 'Cost Configuration' },
-    { name: 'Alerts', href: '/alerts', icon: Bell, description: 'Cost Notifications' },
-    { name: 'Budgets', href: '/budgets', icon: Wallet, description: 'Spending Limits' },
-    { name: 'Optimization', href: '/optimization', icon: Lightbulb, description: 'Cost Savings' },
-    { name: 'Profile', href: '/profile', icon: User, description: 'Account Settings' },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, description: 'Overview & Analytics', public: true },
+    { name: 'API Logs', href: '/app/logs', icon: FileText, description: 'Request History', public: false },
+    { name: 'Test Logger', href: '/app/test-logger', icon: Zap, description: 'Log Real API Calls', public: false },
+    { name: 'Pricing Rules', href: '/app/pricing', icon: DollarSign, description: 'Cost Configuration', public: false },
+    { name: 'Alerts', href: '/app/alerts', icon: Bell, description: 'Cost Notifications', public: false },
+    { name: 'Budgets', href: '/app/budgets', icon: Wallet, description: 'Spending Limits', public: false },
+    { name: 'Optimization', href: '/app/optimization', icon: Lightbulb, description: 'Cost Savings', public: false },
+    { name: 'Profile', href: '/app/profile', icon: User, description: 'Account Settings', public: false },
   ];
+
+  const visibleNavigation = isAuthenticated 
+    ? navigation 
+    : navigation.filter(item => item.public);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -63,7 +67,7 @@ const Layout = () => {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-            {navigation.map((item, index) => (
+            {visibleNavigation.map((item, index) => (
               <NavLink
                 key={item.name}
                 to={item.href}
@@ -90,29 +94,68 @@ const Layout = () => {
                 <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </NavLink>
             ))}
+            
+            {!isAuthenticated && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="bg-gradient-to-br from-primary-50 to-blue-50 p-4 rounded-xl">
+                  <h3 className="font-semibold text-gray-900 mb-2 text-sm">Get Full Access</h3>
+                  <p className="text-xs text-gray-600 mb-3">
+                    Sign up to track your real API costs, set budgets, and get personalized optimization suggestions.
+                  </p>
+                  <div className="space-y-2">
+                    <a 
+                      href="/signup" 
+                      className="block w-full text-center bg-primary-600 text-white py-2 px-3 rounded-lg text-xs font-medium hover:bg-primary-700 transition-colors"
+                    >
+                      Sign Up Free
+                    </a>
+                    <a 
+                      href="/login" 
+                      className="block w-full text-center bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
+                    >
+                      Login
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
           </nav>
 
           {/* User Info */}
           <div className="px-4 py-4 border-t border-gray-100 bg-gray-50">
-            <div className="flex items-center mb-3 px-3 py-2">
-              <div className="w-11 h-11 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center shadow-md">
-                <User className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-3 flex-1">
-                <p className="text-sm font-semibold text-gray-900">{user?.name || user?.email}</p>
-                <p className="text-xs text-gray-500 capitalize flex items-center gap-1">
-                  <span className={`w-2 h-2 rounded-full ${user?.role === 'admin' ? 'bg-green-500' : 'bg-blue-500'}`}></span>
-                  {user?.role}
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center mb-3 px-3 py-2">
+                  <div className="w-11 h-11 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center shadow-md">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="ml-3 flex-1">
+                    <p className="text-sm font-semibold text-gray-900">{user?.name || user?.email}</p>
+                    <p className="text-xs text-gray-500 capitalize flex items-center gap-1">
+                      <span className={`w-2 h-2 rounded-full ${user?.role === 'admin' ? 'bg-green-500' : 'bg-blue-500'}`}></span>
+                      {user?.role}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={logout}
+                  className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <div className="text-center">
+                <div className="w-11 h-11 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center shadow-md mx-auto mb-3">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm font-semibold text-gray-900 mb-1">Demo Mode</p>
+                <p className="text-xs text-gray-500 mb-3">
+                  You're viewing demo data. Sign up to track your real API costs.
                 </p>
               </div>
-            </div>
-            <button
-              onClick={logout}
-              className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 hover:shadow-md active:scale-95"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </button>
+            )}
           </div>
         </div>
       </div>

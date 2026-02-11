@@ -25,9 +25,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         
-        <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+        {/* Public Dashboard - Anyone can access */}
+        <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+        
+        {/* Protected Routes - Require Authentication */}
+        <Route path="/app" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="logs" element={<Logs />} />
           <Route path="test-logger" element={<TestAPILogger />} />
           <Route path="pricing" element={<Pricing />} />
